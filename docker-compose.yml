@@ -16,7 +16,7 @@ services:
   php-fpm:
     build: ./docker/php-fpm
     volumes:
-      - ./src:/app/public
+      - ./src:/app
     depends_on:
       - mariadb
     environment:
@@ -32,7 +32,6 @@ services:
     build: docker/composer
     volumes:
       - ./src:/app
-    working_dir: /home/h909220706/socol-taxi.ru/docs
     environment:
       - PHP_IDE_CONFIG=serverName=Docker
       - COMPOSER_AUTH=${COMPOSER_AUTH}
@@ -46,7 +45,7 @@ services:
     build: docker/php-cli
     volumes:
       - ./src:/app
-    working_dir: /home/h909220706/socol-taxi.ru/docs
+    working_dir: /app
     depends_on:
       - mariadb
     environment:
@@ -62,7 +61,7 @@ services:
     build: docker/php-cli
     volumes:
       - ./src:/app
-    working_dir: /home/h909220706/socol-taxi.ru/docs
+    working_dir: /app
     entrypoint:
       - php
       - artisan
@@ -81,8 +80,8 @@ services:
     build: docker/php-cli
     volumes:
       - ./src:/app
-    command: php artisan serve
-    working_dir: /home/h909220706/socol-taxi.ru/docs
+    command: php artisan serve --host 0.0.0.0
+    working_dir: /app
     ports:
       - ${HOST_SERVE_PORT}:${DEFAULT_SERVE_PORT}
     depends_on:
