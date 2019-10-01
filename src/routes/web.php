@@ -1,5 +1,7 @@
 <?php
 
+use App\Contracts\Source\RouteName\ShortenerInterface;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,3 +16,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/shortener', 'ShortenerController@showForm')->name(ShortenerInterface::SHOW_FORM);
+Route::post('/shortener', 'ShortenerController@shortUrl')->name(ShortenerInterface::SHORT_URL);
