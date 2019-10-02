@@ -64,9 +64,11 @@ class UrlRepository
         return $this->idHasher->getHash($id);
     }
 
-    private function save(UrlModel $model)
+    private function save(UrlModel $model): UrlModel
     {
         $model->save();
+
+        return $model;
     }
 
     public function getByCode(string $code): ?UrlModel

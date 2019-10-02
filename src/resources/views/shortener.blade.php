@@ -137,7 +137,7 @@
                 <div class="form">
                     <form action="" method="POST">
                         @csrf
-                        <label>Url: <input name="url" placeholder="https://devsmonkeys.com/" /></label>
+                        <label>Url: <input name="url" placeholder="https://devsmonkeys.com/" type="url"/></label>
                         <button type="submit">Short It!</button>
                     </form>
                 </div>

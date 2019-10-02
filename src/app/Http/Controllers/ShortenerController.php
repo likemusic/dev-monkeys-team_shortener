@@ -46,7 +46,11 @@ class ShortenerController extends Controller
 
     public function shortUrl(Request $request)
     {
-        $url = $request->get('url');//todo:validate
+        $request->validate([
+            'url' => 'required|url'
+        ]);
+
+        $url = $request->get('url');//todo sanitize url
 
         [$shortUrl, $statUrl] = $this->getShortAndStatUrls($url);
 
