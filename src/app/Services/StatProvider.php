@@ -36,7 +36,7 @@ class StatProvider
         return [
             'urls' => [
                 'source' => $sourceUrl,
-                'short' => $shortUrl,
+                'short' => urldecode($shortUrl),
             ],
             'total' => $total,
             'visitors' => $visitors,
