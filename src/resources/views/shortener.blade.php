@@ -53,6 +53,10 @@
                 font-size: 84px;
             }
 
+            .links {
+                margin-top: 5em;
+            }
+
             .links > a {
                 color: #636b6f;
                 padding: 0 25px;
@@ -112,15 +116,15 @@
                             <caption>Urls</caption>
                             <tr>
                                 <th>Source:</th>
-                                <td><code>{{ $url }}</code></td>
+                                <td><code>{{ $sourceUrl }}</code> <a href="{{ $sourceUrl }}">GO</a></td>
                             </tr>
                             <tr>
                                 <th>Short:</th>
-                                <td><code>{{ $shortUrl }}</code></td>
+                                <td><code>{{ $shortUrl }}</code> <a href="{{ $shortUrl }}">GO</a></td>
                             </tr>
                             <tr>
                                 <th>Stat:</th>
-                                <td><code>{{ $statUrl }}</code></td>
+                                <td><code>{{ $statUrl }}</code> <a href="{{ $statUrl }}">GO</a></td>
                             </tr>
                         </table>
                     </div>
@@ -139,7 +143,7 @@
                 </div>
 
 
-                <div class="links bottom">
+                <div class="links">
                     {{--<a href="https://laravel.com/docs">Docs</a>--}}
                     <a href="https://devsmonkeys.com/">DevsMonkeys Website</a>
                     <a href="https://github.com/likemusic/dev-monkeys-team_shortener">GitHub</a>

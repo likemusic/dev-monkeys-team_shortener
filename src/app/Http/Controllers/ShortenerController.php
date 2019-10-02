@@ -4,9 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Contracts\Source\RouteName\ShortenerInterface as ShortenerRouteNameInterface;
+use App\Services\UrlShortener;
 
 class ShortenerController extends Controller
 {
+    /**
+     * @var UrlShortener
+     */
+    private $urlShortener;
+
+    public function __construct(UrlShortener $urlShortener)
+    {
+        $this->urlShortener = $urlShortener;
+    }
+
     public function showForm()
     {
         $sessionFlushData = session()->getOldInput();
@@ -23,7 +34,7 @@ class ShortenerController extends Controller
         $sessionFlushData = [
             'shortUrl' => $shortUrl,
             'statUrl' => $statUrl,
-            'url' => $url,
+            'sourceUrl' => $url,
         ];
 
 //        $request->session()->flash('urls', $sessionFlushData);
@@ -35,11 +46,18 @@ class ShortenerController extends Controller
 //        return view('shortener', );
     }
 
+    public function showStat(string $code)
+    {
+        return 'Stat';
+    }
+
+    public function redirect(string $code)
+    {
+        return 'Redirect';
+    }
+
     private function getShortAndStatUrls(string $url): array
     {
-        return [
-            'https://bit.ly/2odofR4',
-            'https://bit.ly/2odofR4+'
-        ];
+        return $this->urlShortener->getShortAndStatUrls($url);
     }
 }
