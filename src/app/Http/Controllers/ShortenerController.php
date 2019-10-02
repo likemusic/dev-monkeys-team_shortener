@@ -8,6 +8,7 @@ use App\Services\RequestToVisitorDataConverter;
 use App\Services\UrlShortener;
 use App\Url as UrlModel;
 use Illuminate\Http\Request;
+use App\Services\StatProvider;
 
 class ShortenerController extends Controller
 {
@@ -26,15 +27,22 @@ class ShortenerController extends Controller
      */
     private $requestToVisitorDataConverter;
 
+    /**
+     * @var StatProvider
+     */
+    private $statProvider;
+
     public function __construct(
         UrlShortener $urlShortener,
         UrlRepository $urlRepository,
-        RequestToVisitorDataConverter $requestToVisitorDataConverter
+        RequestToVisitorDataConverter $requestToVisitorDataConverter,
+        StatProvider $statProvider
     )
     {
         $this->urlShortener = $urlShortener;
         $this->urlRepository = $urlRepository;
         $this->requestToVisitorDataConverter = $requestToVisitorDataConverter;
+        $this->statProvider = $statProvider;
     }
 
     public function showForm()
@@ -76,7 +84,14 @@ class ShortenerController extends Controller
 
     public function showStat(string $code)
     {
-        return 'Stat';
+        $statData = $this->getStatByCode($code);
+
+        return view('stat', $statData);
+    }
+
+    private function getStatByCode(string $code): array
+    {
+        return $this->statProvider->getStatByCode($code);
     }
 
     public function redirect(string $code, Request $request)
