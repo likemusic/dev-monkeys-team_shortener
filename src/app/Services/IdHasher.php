@@ -71,9 +71,11 @@ class IdHasher
             return $str;
         }
 
-        $diff = strlen($str) - $strLength;
+        $padLength = $length - $strLength;
 
-        return str_pad($str, $length + $diff, $pad, STR_PAD_LEFT);
+        $padStr = str_repeat($pad, $padLength);
+
+        return $padStr . $str;
     }
 
     private function reverseStr(string $str)
