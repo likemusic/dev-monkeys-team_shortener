@@ -34,10 +34,10 @@ class IdHasher
         while ($dividend > $divisor) {
             $remainder = $dividend % $divisor;
             $reversedCode .= $this->charAt($hashChars, $remainder);
-            $dividend -= $remainder;
+            $dividend = intdiv($dividend, $divisor);
         }
 
-        $reversedCode .= $hashChars{$remainder};
+        $reversedCode .= $this->charAt($hashChars, $remainder);
 
         $codeLength = mb_strlen($reversedCode);
 
