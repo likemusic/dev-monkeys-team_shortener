@@ -17,6 +17,7 @@ services:
     build: ./docker/php-fpm
     volumes:
       - ./src:/app
+      - ./docker/php-common/browsercap.ini:/usr/local/etc/php/conf.d/browsercap.ini
     depends_on:
       - mariadb
     environment:

@@ -13,21 +13,21 @@ use App\Contracts\Source\RouteName\ShortenerInterface;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 
-
-Route::get('/shortener', 'ShortenerController@showForm')->name(ShortenerInterface::SHOW_FORM);
-Route::post('/shortener', 'ShortenerController@shortUrl')->name(ShortenerInterface::SHORT_URL);
 
 $codeChars = config('shortener.code.chars');
-$ecapedCodeChars = preg_quote($codeChars);
+$escapedCodeChars = preg_quote($codeChars);
 
-Route::get('/shortener/{code}+', 'ShortenerController@showStat')
+Route::get('/{code}+', 'ShortenerController@showStat')
     ->name(ShortenerInterface::SHOW_STAT)
-    ->where('code', "[{$ecapedCodeChars}]+");
+    ->where('code', "[{$escapedCodeChars}]+");
 
-Route::get('/shortener/{code}', 'ShortenerController@redirect')
+Route::get('/{code}', 'ShortenerController@redirect')
     ->name(ShortenerInterface::REDIRECT)
-    ->where('code', "[{$ecapedCodeChars}]+");
+    ->where('code', "[{$escapedCodeChars}]+");
+
+Route::get('/', 'ShortenerController@showForm')->name(ShortenerInterface::SHOW_FORM);
+Route::post('/', 'ShortenerController@shortUrl')->name(ShortenerInterface::SHORT_URL);

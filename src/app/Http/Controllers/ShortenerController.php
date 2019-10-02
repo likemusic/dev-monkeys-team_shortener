@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Contracts\Source\RouteName\ShortenerInterface as ShortenerRouteNameInterface;
+use App\Repositories\UrlRepository;
+use App\Services\RequestToVisitorDataConverter;
 use App\Services\UrlShortener;
+use App\Url as UrlModel;
+use Illuminate\Http\Request;
 
 class ShortenerController extends Controller
 {
@@ -13,9 +16,25 @@ class ShortenerController extends Controller
      */
     private $urlShortener;
 
-    public function __construct(UrlShortener $urlShortener)
+    /**
+     * @var UrlRepository
+     */
+    private $urlRepository;
+
+    /**
+     * @var RequestToVisitorDataConverter
+     */
+    private $requestToVisitorDataConverter;
+
+    public function __construct(
+        UrlShortener $urlShortener,
+        UrlRepository $urlRepository,
+        RequestToVisitorDataConverter $requestToVisitorDataConverter
+    )
     {
         $this->urlShortener = $urlShortener;
+        $this->urlRepository = $urlRepository;
+        $this->requestToVisitorDataConverter = $requestToVisitorDataConverter;
     }
 
     public function showForm()
@@ -27,7 +46,7 @@ class ShortenerController extends Controller
 
     public function shortUrl(Request $request)
     {
-        $url = $request->get('url');
+        $url = $request->get('url');//todo:validate
 
         [$shortUrl, $statUrl] = $this->getShortAndStatUrls($url);
 
@@ -46,18 +65,46 @@ class ShortenerController extends Controller
 //        return view('shortener', );
     }
 
+    private function getShortAndStatUrls(string $url): array
+    {
+        return $this->urlShortener->getShortAndStatUrls($url);
+    }
+
     public function showStat(string $code)
     {
         return 'Stat';
     }
 
-    public function redirect(string $code)
+    public function redirect(string $code, Request $request)
     {
-        return 'Redirect';
+        $urlModel = $this->getUrlModelByCode($code);
+
+        $this->addVisitorByRequest($urlModel, $request);
+
+        return $this->redirectByUrlModel($urlModel);
     }
 
-    private function getShortAndStatUrls(string $url): array
+    private function getUrlModelByCode(string $code)
     {
-        return $this->urlShortener->getShortAndStatUrls($url);
+        return $this->urlRepository->getByCode($code);
+    }
+
+    private function addVisitorByRequest(UrlModel $urlModel, Request $request)
+    {
+        $visitorData = $this->getVisitorDataByRequest($request);
+
+        $urlModel->visitors()->create($visitorData);
+    }
+
+    private function getVisitorDataByRequest(Request $request): array
+    {
+        return $this->requestToVisitorDataConverter->convert($request);
+    }
+
+    private function redirectByUrlModel(UrlModel $urlModel)
+    {
+        $redirectUrl = $urlModel->url;
+
+        return redirect($redirectUrl);//todo: status code?
     }
 }

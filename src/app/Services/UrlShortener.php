@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Url;
+use App\Repositories\UrlRepository;
 
 class UrlShortener
 {
     /**
-     * @var Url
+     * @var UrlRepository
      */
     private $urlRepository;
 
@@ -22,7 +22,7 @@ class UrlShortener
     private $urlGenerator;
 
     public function __construct(
-        Url $urlRepository,
+        UrlRepository $urlRepository,
         IdHasher $idHasher,
         UrlGenerator $urlGenerator
     )
@@ -47,35 +47,13 @@ class UrlShortener
     private function getCodeByUrl(string $url)
     {
         $urlModel = $this->getOrCreateAndSaveUrlModel($url);
-        $urlModelId = $urlModel->id;
 
-        return $this->getCodeById($urlModelId);
+        return $urlModel->code;
     }
 
     private function getOrCreateAndSaveUrlModel(string $url)
     {
-        $urlModel = $this->getUrlModelByUrl($url);
-
-        if ($urlModel) {
-            return $urlModel;
-        }
-
-        return $this->createAndSaveUrlModel($url);
-    }
-
-    private function getUrlModelByUrl(string $url)
-    {
-        return $this->urlRepository->where('url', $url)->first();
-    }
-
-    private function createAndSaveUrlModel(string $url)
-    {
-        return $this->urlRepository->create(['url' => $url]);
-    }
-
-    private function getCodeById(int $urlModelId)
-    {
-        return $this->idHasher->getHash($urlModelId);
+        return $this->urlRepository->getOrAddByUrl($url);
     }
 
     private function generateShortUrl(string $code): string
